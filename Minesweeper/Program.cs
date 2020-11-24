@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Minesweeper
 {
@@ -6,7 +7,8 @@ namespace Minesweeper
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new Board(10, 10);
+            Console.ReadKey(true);
         }
     }
 }
