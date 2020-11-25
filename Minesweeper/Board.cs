@@ -25,5 +25,15 @@ namespace Minesweeper
                 Console.Write(" ");
             }
         }
+
+        public static void UpdateCell(int x, int y, char c, ConsoleColor bgc)
+        {
+            //Console.WriteLine("flag being called");
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = bgc;
+            Console.Write($"{c}");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(1, 20);
+        }
     }
 }
