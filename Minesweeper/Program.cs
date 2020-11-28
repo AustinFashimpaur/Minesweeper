@@ -10,10 +10,17 @@ namespace Minesweeper
     class Program
     {
         static void Main(string[] args)
-        { 
+        {
             Console.CursorVisible = false;
-            Game myGame = new Game(10, 10);
-            
+            Game myGame = new Game(14, 10, 3);
+
+            do
+            {
+                myGame.UserControls();
+            }
+            while (!myGame.GameOver);
+
+
             Console.ReadKey(true);
         }
     }
