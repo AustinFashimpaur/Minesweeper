@@ -22,6 +22,7 @@ namespace Minesweeper
 
 
             Console.ReadKey(true);
+            Console.WriteLine();
         }
     }
 }
