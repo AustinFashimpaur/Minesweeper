@@ -12,7 +12,7 @@ namespace Minesweeper
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            Game myGame = new Game(14, 10, 1);
+            Game myGame = new Game(13, 10, 1);
 
             do
             {

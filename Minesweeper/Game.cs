@@ -74,81 +74,18 @@ namespace Minesweeper
                     //if bomb is active, iterate through boundry exceptions
                     if (cells[i, j].Bomb == true)
                     {
-                        //Top left corner
-                        if (i == 0 && j == 0)
+                        int adjX, adjY;
+                        for (int k = -1; k < 2; k++)
                         {
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i + 1, j + 1].AdjacentBombs++;
-                            cells[i, j + 1].AdjacentBombs++;
-                        }
-                        //Top right corner
-                        else if (i == 0 && j == (x - 1))
-                        {
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i + 1, j - 1].AdjacentBombs++;
-                            cells[i, j - 1].AdjacentBombs++;
-                        }
-                        //bottom left corner
-                        else if (i == (y - 1) && j == 0)
-                        {
-                            cells[i - 1, j].AdjacentBombs++;
-                            cells[i - 1, j + 1].AdjacentBombs++;
-                            cells[i, j + 1].AdjacentBombs++;
-                        }
-                        //bottom right corner
-                        else if (i == (y - 1) && j == (x - 1))
-                        {
-                            cells[i - 1, j].AdjacentBombs++;
-                            cells[i - 1, j - 1].AdjacentBombs++;
-                            cells[i, j - 1].AdjacentBombs++;
-                        }
-                        //Top row excluding corners
-                        else if (i == 0)
-                        {
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i + 1, j + 1].AdjacentBombs++;
-                            cells[i + 1, j - 1].AdjacentBombs++;
-                            cells[i, j + 1].AdjacentBombs++;
-                            cells[i, j - 1].AdjacentBombs++;
-                        }
-                        //bottom row excluding corners
-                        else if (i == (y - 1))
-                        {
-                            cells[i - 1, j].AdjacentBombs++;
-                            cells[i - 1, j + 1].AdjacentBombs++;
-                            cells[i - 1, j - 1].AdjacentBombs++;
-                            cells[i, j + 1].AdjacentBombs++;
-                            cells[i, j - 1].AdjacentBombs++;
-                        }
-                        //Leftmost column excluding corners
-                        else if (j == 0)
-                        {
-                            cells[i, j + 1].AdjacentBombs++;
-                            cells[i + 1, j + 1].AdjacentBombs++;
-                            cells[i - 1, j + 1].AdjacentBombs++;
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i - 1, j].AdjacentBombs++;
-                        }
-                        //Rightmost column excluding corners
-                        else if (j == (x - 1))
-                        {
-                            cells[i, j - 1].AdjacentBombs++;
-                            cells[i - 1, j - 1].AdjacentBombs++;
-                            cells[i + 1, j - 1].AdjacentBombs++;
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i - 1, j].AdjacentBombs++;
-                        }
-                        //All cells in the middle
-                        else
-                        {
-                            cells[i + 1, j].AdjacentBombs++;
-                            cells[i - 1, j].AdjacentBombs++;
-                            cells[i, j + 1].AdjacentBombs++;
-                            cells[i, j - 1].AdjacentBombs++;
-                            cells[i + 1, j + 1].AdjacentBombs++;
-                            cells[i + 1, j - 1].AdjacentBombs++;
-                            cells[i - 1, j + 1].AdjacentBombs++;
-                            cells[i - 1, j - 1].AdjacentBombs++;
+                            for (int g = -1; g < 2; g++)
+                            {
+                                adjX = j + k;
+                                adjY = i + g;
+                                if (((adjX != 0) || (adjY != 0)) && ValidSlots(adjX, adjY))
+                                {
+                                    cells[adjY, adjX].AdjacentBombs++;
+                                }
+                            }
                         }
                     }
                 }
@@ -199,7 +136,7 @@ namespace Minesweeper
                 case ConsoleKey.Spacebar:
                     if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
                     {
-                        Board.UpdateCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, 'F');
+                        Board.UpdateCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, '@');
                         cells[arrayPosY, arrayPosX].Flagged = true;
                     }
                     else if(cells[arrayPosY, arrayPosX].Revealed)
@@ -220,13 +157,41 @@ namespace Minesweeper
                     }
                     else if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
                     {
-                        Board.RevealCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, cells[arrayPosY, arrayPosX]);
-                        cells[arrayPosY, arrayPosX].Revealed = true;
+                        ChainReveal(arrayPosX, arrayPosY);
+                        //Board.RevealCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, cells[arrayPosY, arrayPosX]);
+                        //cells[arrayPosY, arrayPosX].Revealed = true;
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        public void ChainReveal(int x, int y)
+        {
+            Board.RevealCell(x * 2 + 1, y * 2 + 1, cells[y, x]);
+            cells[y, x].Revealed = true;
+            int chainX, chainY;
+            if (cells[y, x].AdjacentBombs == 0)
+            {
+                for (int i = -1; i < 2; i++)
+                {
+                    for (int j = -1; j < 2; j++)
+                    {
+                        chainX = x + i;
+                        chainY = y + j;
+                        if (ValidSlots(chainX, chainY) && (!cells[chainY, chainX].Revealed) && (!cells[chainY, chainX].Flagged))
+                        {
+                            ChainReveal(chainX, chainY);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool ValidSlots(int x, int y)
+        {
+            return ((x >= 0) && (y >= 0) && (x < BoardWidth) && (y < BoardHeight));
         }
 
         public Boolean Done()
