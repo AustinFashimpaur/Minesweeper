@@ -231,7 +231,6 @@ namespace Minesweeper
 
         public Boolean Done()
         {
-            Console.WriteLine();
             return false; //TODO yes
         }
     }

@@ -26,7 +26,8 @@ namespace Minesweeper
             Console.Write("Welcome to a console based version of Minsweeper");
             Console.SetCursorPosition(Columns * 2 + 2, 1);
             Console.Write("************************************************");
-            //Console.SetCursorPosition(Columns * 2 + 3, 1);
+            Console.SetCursorPosition(Columns * 2 + 2, 2);
+            Console.WriteLine("TODO");
         }
 
         /// <summary>

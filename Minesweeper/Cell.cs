@@ -10,8 +10,6 @@ namespace Minesweeper
         public bool Revealed { get; set; }
         public bool Flagged { get; set; }
         public int AdjacentBombs { get; set; }
-        public int PosX { get; }
-        public int PosY { get; }
 
         public Cell(bool bomb)
         {
