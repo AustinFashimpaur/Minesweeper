@@ -36,7 +36,7 @@ namespace Minesweeper
         public Cell[,] SetUpCells(int x, int y, int difficulty)
         {
             Cell[,] cells = new Cell[y, x];
-            int totalBombsLeft = difficulty * 7;
+            int totalBombsLeft = difficulty * 15;
             rand = new Random();
 
             //Generate cells with bombs based on difficulty
@@ -103,40 +103,40 @@ namespace Minesweeper
                 case ConsoleKey.UpArrow:
                     if (arrayPosY > 0)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, true);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
                         arrayPosY--;
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, false);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
                     }
                     break;
                 case ConsoleKey.DownArrow:
                     if (arrayPosY < BoardHeight - 1)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, true);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
                         arrayPosY++;
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, false);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
                     }
 
                     break;
                 case ConsoleKey.LeftArrow:
                     if (arrayPosX > 0)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, true);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
                         arrayPosX--;
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, false);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
                     }
                     break;
                 case ConsoleKey.RightArrow:
                     if (arrayPosX < BoardWidth - 1)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, true);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
                         arrayPosX++;
-                        Board.MoveFrame(arrayPosX * 2 + 1, arrayPosY * 2 + 1, false);
+                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
                     }
                     break;
                 case ConsoleKey.Spacebar:
                     if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
                     {
-                        Board.UpdateCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, '@');
+                        Board.UpdateCell(arrayPosX * 2 + 2, arrayPosY + 1, '@');
                         cells[arrayPosY, arrayPosX].Flagged = true;
                     }
                     else if(cells[arrayPosY, arrayPosX].Revealed)
@@ -144,22 +144,20 @@ namespace Minesweeper
                     }
                     else
                     {
-                        Board.UpdateCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, '#');
+                        Board.UpdateCell(arrayPosX * 2 + 2, arrayPosY + 1, '#');
                         cells[arrayPosY, arrayPosX].Flagged = false;
                     }
                     break;
                 case ConsoleKey.Enter:
                     if (cells[arrayPosY, arrayPosX].Bomb && !cells[arrayPosY, arrayPosX].Flagged)
                     {
-                        Board.RevealCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, cells[arrayPosY, arrayPosX]);
+                        Board.RevealCell(arrayPosX * 2 + 2, arrayPosY + 1, cells[arrayPosY, arrayPosX]);
                         cells[arrayPosY, arrayPosX].Revealed = true;
                         //GameOver = true;
                     }
                     else if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
                     {
                         ChainReveal(arrayPosX, arrayPosY);
-                        //Board.RevealCell(arrayPosX * 2 + 1, arrayPosY * 2 + 1, cells[arrayPosY, arrayPosX]);
-                        //cells[arrayPosY, arrayPosX].Revealed = true;
                     }
                     break;
                 default:
@@ -169,7 +167,7 @@ namespace Minesweeper
 
         public void ChainReveal(int x, int y)
         {
-            Board.RevealCell(x * 2 + 1, y * 2 + 1, cells[y, x]);
+            Board.RevealCell(x * 2 + 2, y + 1, cells[y, x]);
             cells[y, x].Revealed = true;
             int chainX, chainY;
             if (cells[y, x].AdjacentBombs == 0)

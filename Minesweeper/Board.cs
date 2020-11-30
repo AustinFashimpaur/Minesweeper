@@ -22,27 +22,37 @@ namespace Minesweeper
         /// Prints small menu with the rules and win/lose conditions
         /// </summary>
         public void MenuScreen() {
-            Console.SetCursorPosition(Columns * 2 + 2, 0);
+            Console.SetCursorPosition(Columns * 2 + 4, 0);
             Console.Write("Welcome to a console based version of Minsweeper");
-            Console.SetCursorPosition(Columns * 2 + 2, 1);
+            Console.SetCursorPosition(Columns * 2 + 4, 1);
             Console.Write("************************************************");
-            Console.SetCursorPosition(Columns * 2 + 2, 2);
-            Console.WriteLine("TODO");
+            Console.SetCursorPosition(Columns * 2 + 4, 2);
+            Console.Write("Begin by pressing the down or right arrow.");
         }
 
         /// <summary>
         /// Draws a board based off of the Rows and Columns
         /// </summary>
         public void DrawBoard() {
-            Console.SetCursorPosition(0,1);
-            Console.Write(" ");
+            Console.SetCursorPosition(0, 0);
+            Console.Write("+");
+            for (int i = 0; i < (Columns * 2 + 1); i++)
+                Console.Write("-");
+            Console.Write("+");
+
+            Console.SetCursorPosition(0, 1);
             for (int i = 0; i < Rows; i++) {
+                Console.Write("| ");
                 for (int j = 0; j < Columns; j++) {
                     Console.Write("# ");
                 }
-                Console.WriteLine("\n");
-                Console.Write(" ");
+                Console.WriteLine("|");
             }
+
+            Console.Write("+");
+            for (int i = 0; i < (Columns * 2 + 1); i++)
+                Console.Write("-");
+            Console.Write("+");
         }
 
         /// <summary>
@@ -72,11 +82,52 @@ namespace Minesweeper
             }
             else if (c.Bomb)
             {
+                ConsoleColor original = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("*");
+                Console.ForegroundColor = original;
             }
             else
             {
-                Console.Write($"{c.AdjacentBombs}");
+                ConsoleColor original = Console.ForegroundColor;
+                switch (c.AdjacentBombs)
+                {
+                    case 1:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 2:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 3:
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 4:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 5:
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 6:
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 7:
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    case 8:
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write($"{c.AdjacentBombs}");
+                        break;
+                    default:
+                        break;
+                }
+                Console.ForegroundColor = original;
             }
         }
 
