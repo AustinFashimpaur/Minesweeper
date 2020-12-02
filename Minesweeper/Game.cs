@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+
 namespace Minesweeper
 {
     /// <summary>
@@ -6,9 +10,11 @@ namespace Minesweeper
     /// </summary>
     public class Game
     {
-        private Cell[,] cells;
-        private int arrayPosX = 0, arrayPosY = 0;
-        private Random rand;
+        public static Cell[,] cells;
+        private int posX = 0, posY = 0;
+        public static readonly Random rand = new Random();
+        private readonly IList<Cell> listCells;
+
         public bool GameOver { set; get; } = false;
         public int BoardWidth { get; }
         public int BoardHeight { get; }
@@ -24,6 +30,12 @@ namespace Minesweeper
             Difficulty = difficulty;
 
             cells = SetUpCells(BoardWidth, BoardHeight, difficulty);
+
+            listCells = new List<Cell>();
+            foreach (Cell c in cells)
+            {
+                listCells.Add(c);
+            }
         }
 
         /// <summary>
@@ -33,11 +45,10 @@ namespace Minesweeper
         /// <param name="y">Row</param>
         /// <param name="difficulty"></param>
         /// <returns>2D array of Cell</returns>
-        public Cell[,] SetUpCells(int x, int y, int difficulty)
+        private Cell[,] SetUpCells(int x, int y, int difficulty)
         {
             Cell[,] cells = new Cell[y, x];
             int totalBombsLeft = difficulty * 15;
-            rand = new Random();
 
             //Generate cells with bombs based on difficulty
             for (int b = 0; b < totalBombsLeft; b++)
@@ -50,7 +61,7 @@ namespace Minesweeper
                     randY = rand.Next(y);
                 }
                 while (cells[randY, randX] != null);
-                cells[randY, randX] = new Cell(true);
+                cells[randY, randX] = new Cell(randX, randY, true);
             }
 
             //Generate non-bomb cells to fill the rest of the board && assign AdjacentBomb values
@@ -60,7 +71,7 @@ namespace Minesweeper
                 {
                     if (cells[i, j] == null)
                     {
-                        cells[i, j] = new Cell(false);
+                        cells[i, j] = new Cell(j, i,false);
                     }
                 }
             }
@@ -101,63 +112,65 @@ namespace Minesweeper
             switch (ch)
             {
                 case ConsoleKey.UpArrow:
-                    if (arrayPosY > 0)
+                    if (posY > 0)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
-                        arrayPosY--;
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, true);
+                        posY--;
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, false);
                     }
                     break;
                 case ConsoleKey.DownArrow:
-                    if (arrayPosY < BoardHeight - 1)
+                    if (posY < BoardHeight - 1)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
-                        arrayPosY++;
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, true);
+                        posY++;
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, false);
                     }
 
                     break;
                 case ConsoleKey.LeftArrow:
-                    if (arrayPosX > 0)
+                    if (posX > 0)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
-                        arrayPosX--;
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, true);
+                        posX--;
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, false);
                     }
                     break;
                 case ConsoleKey.RightArrow:
-                    if (arrayPosX < BoardWidth - 1)
+                    if (posX < BoardWidth - 1)
                     {
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, true);
-                        arrayPosX++;
-                        Board.MoveFrame(arrayPosX * 2 + 2, arrayPosY + 1, false);
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, true);
+                        posX++;
+                        Board.MoveFrame(posX * 2 + 2, posY + 1, false);
                     }
                     break;
                 case ConsoleKey.Spacebar:
-                    if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
+                    if (!cells[posY, posX].Flagged && !cells[posY, posX].Revealed)
                     {
-                        Board.UpdateCell(arrayPosX * 2 + 2, arrayPosY + 1, '@');
-                        cells[arrayPosY, arrayPosX].Flagged = true;
+                        Board.UpdateCell(posX, posY, '@');
+                        cells[posY, posX].Flagged = true;
                     }
-                    else if(cells[arrayPosY, arrayPosX].Revealed)
+                    else if(cells[posY, posX].Revealed)
                     {
                     }
                     else
                     {
-                        Board.UpdateCell(arrayPosX * 2 + 2, arrayPosY + 1, '#');
-                        cells[arrayPosY, arrayPosX].Flagged = false;
+                        Board.UpdateCell(posX, posY, '#');
+                        cells[posY, posX].Flagged = false;
                     }
                     break;
                 case ConsoleKey.Enter:
-                    if (cells[arrayPosY, arrayPosX].Bomb && !cells[arrayPosY, arrayPosX].Flagged)
+                    if (cells[posY, posX].Bomb && !cells[posY, posX].Flagged)
                     {
-                        Board.RevealCell(arrayPosX * 2 + 2, arrayPosY + 1, cells[arrayPosY, arrayPosX]);
-                        cells[arrayPosY, arrayPosX].Revealed = true;
+                        Board.RevealCell(posX, posY, cells[posY, posX]);
+                        Console.Beep();
+                        cells[posY, posX].Revealed = true;
+                        RevealBombs();
                         //GameOver = true;
                     }
-                    else if (!cells[arrayPosY, arrayPosX].Flagged && !cells[arrayPosY, arrayPosX].Revealed)
+                    else if (!cells[posY, posX].Flagged && !cells[posY, posX].Revealed)
                     {
-                        ChainReveal(arrayPosX, arrayPosY);
+                        ChainReveal(posX, posY);
                     }
                     break;
                 default:
@@ -165,9 +178,9 @@ namespace Minesweeper
             }
         }
 
-        public void ChainReveal(int x, int y)
+        private void ChainReveal(int x, int y)
         {
-            Board.RevealCell(x * 2 + 2, y + 1, cells[y, x]);
+            Board.RevealCell(x, y, cells[y, x]);
             cells[y, x].Revealed = true;
             int chainX, chainY;
             if (cells[y, x].AdjacentBombs == 0)
@@ -185,6 +198,21 @@ namespace Minesweeper
                     }
                 }
             }
+        }
+
+        private void RevealBombs()
+        {
+            var results =
+                from c in listCells
+                where c.Bomb == true
+                select c;
+
+            foreach (Cell r in results)
+            {
+                Thread.Sleep(300);
+                Board.RevealCell(r.XPosition, r.YPosition, r);
+            }
+
         }
 
         private bool ValidSlots(int x, int y)

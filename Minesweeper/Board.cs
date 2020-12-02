@@ -3,6 +3,7 @@ namespace Minesweeper
 {
     /// <summary>
     /// Prints and adjusts the text of the board for minesweeper
+    /// as well as the menu, rules, and engame tables.
     /// </summary>
     public class Board
     {
@@ -14,20 +15,28 @@ namespace Minesweeper
         {
             Rows = rows;
             Columns = columns;
-            MenuScreen();
+            RulesScreen();
             DrawBoard();
         }
 
         /// <summary>
-        /// Prints small menu with the rules and win/lose conditions
+        /// Prints small table next to board with the rules and win/lose conditions
         /// </summary>
-        public void MenuScreen() {
+        public void RulesScreen() {
             Console.SetCursorPosition(Columns * 2 + 4, 0);
             Console.Write("Welcome to a console based version of Minsweeper");
             Console.SetCursorPosition(Columns * 2 + 4, 1);
             Console.Write("************************************************");
+
             Console.SetCursorPosition(Columns * 2 + 4, 2);
             Console.Write("Begin by pressing the down or right arrow.");
+
+            Console.SetCursorPosition(Columns * 2 + 4, 4);
+            Console.Write("Controls:");
+            Console.SetCursorPosition(Columns * 2 + 4, 5);
+            Console.Write("-To flag/unflag a cell, press space.");
+            Console.SetCursorPosition(Columns * 2 + 4, 6);
+            Console.Write("-To reveal a cell, press enter.");
         }
 
         /// <summary>
@@ -63,7 +72,7 @@ namespace Minesweeper
         /// <param name="c">Character</param>
         public static void UpdateCell(int x, int y, char c)
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(x * 2 + 2, y + 1);
             Console.Write($"{c}");
         }
 
@@ -75,7 +84,7 @@ namespace Minesweeper
         /// <param name="c">Cell</param>
         public static void RevealCell(int x, int y, Cell c)
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(x * 2 + 2, y + 1);
             if (c.AdjacentBombs == 0 && !c.Bomb)
             {
                 Console.Write(" ");
@@ -83,8 +92,10 @@ namespace Minesweeper
             else if (c.Bomb)
             {
                 ConsoleColor original = Console.ForegroundColor;
+
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("*");
+
                 Console.ForegroundColor = original;
             }
             else
