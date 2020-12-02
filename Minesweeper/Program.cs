@@ -12,17 +12,28 @@ namespace Minesweeper
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            Game myGame = new Game(13, 20, 1);
+
+            Board.MenuScreen();
+            int difficulty = int.Parse(Console.ReadLine());
+
+            while (difficulty > 3 || difficulty < 1)
+            {
+                Console.WriteLine("Please enter a number between 1(easy) and 3(hard):");
+                difficulty = int.Parse(Console.ReadLine());
+            }
+            Console.Clear();
 
             do
             {
-                myGame.UserControls();
+                new Game(13, 20, difficulty);
             }
-            while (!myGame.GameOver);
+            while (!Game.Exit);
 
+            Console.Clear();
+            Console.WriteLine("Thanks for playing!");
+            Thread.Sleep(2000);
+            Console.Clear();
 
-            Console.ReadKey(true);
-            Console.WriteLine();
         }
     }
 }

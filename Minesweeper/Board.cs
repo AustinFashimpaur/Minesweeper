@@ -17,6 +17,14 @@ namespace Minesweeper
             Columns = columns;
             RulesScreen();
             DrawBoard();
+            FeedbackBox();
+        }
+
+        public static void MenuScreen()
+        {
+            Console.WriteLine("Welcome to Minesweeper.\n");
+            Console.WriteLine("To proceed select a difficulty (1-3) then press enter:");
+            Console.WriteLine("1(Easy) 2(Normal) 3(Hard)");
         }
 
         /// <summary>
@@ -37,10 +45,30 @@ namespace Minesweeper
             Console.Write("-To flag/unflag a cell, press space.");
             Console.SetCursorPosition(Columns * 2 + 4, 6);
             Console.Write("-To reveal a cell, press enter.");
+            Console.SetCursorPosition(Columns * 2 + 4, 7);
+            Console.Write("-To exit the game, press escape.");
+
+            Console.SetCursorPosition(Columns * 2 + 4, 9);
+            Console.Write("How to win:");
+            Console.SetCursorPosition(Columns * 2 + 4, 10);
+            Console.Write("Reveal all cells without hitting any bombs!");
+
+            Console.SetCursorPosition(Columns * 2 + 4, 12);
+            Console.Write("Good Luck!");
+        }
+
+        public void FeedbackBox()
+        {
+            Console.SetCursorPosition(Columns * 2 + 4, Rows - 2);
+            Console.Write("+-------------+");
+            Console.SetCursorPosition(Columns * 2 + 4, Rows - 1);
+            Console.Write("|             |");
+            Console.SetCursorPosition(Columns * 2 + 4, Rows);
+            Console.Write("+-------------+");
         }
 
         /// <summary>
-        /// Draws a board based off of the Rows and Columns
+        /// Draws a board based off of the Rows and Columns, complete with a border.
         /// </summary>
         public void DrawBoard() {
             Console.SetCursorPosition(0, 0);
