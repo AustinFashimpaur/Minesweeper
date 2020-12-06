@@ -36,7 +36,7 @@ namespace Minesweeper
             Difficulty = difficulty;
             Revealed = 0;
 
-            cells = SetUpCells(BoardWidth, BoardHeight, difficulty);
+            cells = SetUpCells(BoardWidth, BoardHeight, Difficulty);
 
             listCells = new List<Cell>();
             foreach (Cell c in cells)
@@ -62,7 +62,7 @@ namespace Minesweeper
         private Cell[,] SetUpCells(int x, int y, int difficulty)
         {
             Cell[,] cells = new Cell[y, x];
-            totalBombs = difficulty * 15;
+            totalBombs = difficulty * 12;
             int totalBombsLeft = totalBombs;
 
             //Generate cells with bombs based on difficulty
@@ -193,6 +193,7 @@ namespace Minesweeper
 
                         Thread.Sleep(1000);
                         GameOver = true;
+                        Console.ReadKey();
                     }
                     else if (!cells[posY, posX].Flagged && !cells[posY, posX].Revealed)
                     {
@@ -252,19 +253,27 @@ namespace Minesweeper
         {
             if (Revealed == (BoardHeight * BoardWidth) - totalBombs)
             {
+                Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
+                Console.Write("                               ");
+                Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
+                Console.Write("                               ");
+
                 ConsoleColor originalF = Console.ForegroundColor;
                 ConsoleColor originalB = Console.BackgroundColor;
 
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.BackgroundColor = ConsoleColor.Green;
 
-                Console.SetCursorPosition(BoardWidth * 2 + 7, BoardHeight - 1);
+                Console.SetCursorPosition(BoardWidth * 2 + 16, BoardHeight - 1);
                 Console.Write("You win!!");
+
+                Console.SetCursorPosition(BoardWidth * 2 + 7, BoardHeight);
+                Console.WriteLine("Press any key to continue.");
 
                 WriteStatsFile("Won");
 
-                Thread.Sleep(4000);
                 GameOver = true;
+                Console.ReadKey();
 
                 Console.ForegroundColor = originalF;
                 Console.BackgroundColor = originalB;
@@ -274,9 +283,9 @@ namespace Minesweeper
         private void YouLose()
         {
             Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
-            Console.Write("                        ");
+            Console.Write("                               ");
             Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
-            Console.Write("                        ");
+            Console.Write("                               ");
 
             ConsoleColor originalF = Console.ForegroundColor;
             ConsoleColor originalB = Console.BackgroundColor;
@@ -286,6 +295,9 @@ namespace Minesweeper
 
             Console.SetCursorPosition(BoardWidth * 2 + 16, BoardHeight - 1);
             Console.Write("You Lose.");
+
+            Console.SetCursorPosition(BoardWidth * 2 + 7, BoardHeight);
+            Console.WriteLine("Press any key to continue.");
 
             WriteStatsFile("Lost");
 
@@ -318,11 +330,6 @@ namespace Minesweeper
                 outputFile.WriteLine($"You found {numberFlagged.Count()} bombs, that's {(numberFlagged.Count() == 0 ? 0 : (double)totalBombs/numberFlagged.Count())}%");
                 outputFile.WriteLine($"You revealed {Revealed} spaces.");
             }
-        }
-
-        public Boolean Done()
-        {
-            return false; //TODO yes
         }
     }
 }

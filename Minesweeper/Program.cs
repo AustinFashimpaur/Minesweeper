@@ -22,9 +22,11 @@ namespace Minesweeper
                 {
                     // Read the stream as a string, and write the string to the console.
                     Console.WriteLine($"Reading From {Path.GetFullPath("BoardSize.txt")}");
-                    sr.ReadLine(); //skip intro line
-                    Width = Convert.ToInt32(sr.ReadLine()); //width
-                    Height = Convert.ToInt32(sr.ReadLine()); //height
+                    while (sr.Peek() >= 0)
+                    {
+                        Width = Convert.ToInt32(sr.ReadLine()); //width
+                        Height = Convert.ToInt32(sr.ReadLine()); //height
+                    }
                 }
             }
             catch (IOException e)

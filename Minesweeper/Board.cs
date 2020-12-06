@@ -15,6 +15,7 @@ namespace Minesweeper
         {
             Rows = rows;
             Columns = columns;
+
             RulesScreen();
             DrawBoard();
             FeedbackBox();
