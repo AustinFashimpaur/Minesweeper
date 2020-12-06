@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -13,6 +14,7 @@ namespace Minesweeper
         public static Cell[,] cells;
         private int posX = 0, posY = 0;
         private int totalBombs;
+        private int flaggedRunningTotal = 0;
         public static readonly Random rand = new Random();
         private readonly IList<Cell> listCells;
 
@@ -22,7 +24,8 @@ namespace Minesweeper
         public int BoardWidth { get; }
         public int BoardHeight { get; }
         public int Difficulty { get; }
-        
+        public static string ResultFile { set; get; }
+
 
         public Game(int boardWidth, int boardHeight, int difficulty)
         {
@@ -83,7 +86,7 @@ namespace Minesweeper
                 {
                     if (cells[i, j] == null)
                     {
-                        cells[i, j] = new Cell(j, i,false);
+                        cells[i, j] = new Cell(j, i, false);
                     }
                 }
             }
@@ -159,14 +162,21 @@ namespace Minesweeper
                 case ConsoleKey.Spacebar:
                     if (!cells[posY, posX].Flagged && !cells[posY, posX].Revealed)
                     {
+                        flaggedRunningTotal++;
+                        Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
+                        Console.Write($"{flaggedRunningTotal}/{totalBombs} Flags Placed / Total Bombs");
                         Board.UpdateCell(posX, posY, '@');
                         cells[posY, posX].Flagged = true;
+
                     }
-                    else if(cells[posY, posX].Revealed)
+                    else if (cells[posY, posX].Revealed)
                     {
                     }
                     else
                     {
+                        flaggedRunningTotal--;
+                        Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
+                        Console.Write($"{flaggedRunningTotal}/{totalBombs} Flags Placed / Total Bombs");
                         Board.UpdateCell(posX, posY, '#');
                         cells[posY, posX].Flagged = false;
                     }
@@ -174,6 +184,7 @@ namespace Minesweeper
                 case ConsoleKey.Enter:
                     if (cells[posY, posX].Bomb && !cells[posY, posX].Flagged)
                     {
+
                         Board.RevealCell(posX, posY, cells[posY, posX]);
                         Console.Beep();
 
@@ -186,6 +197,8 @@ namespace Minesweeper
                     else if (!cells[posY, posX].Flagged && !cells[posY, posX].Revealed)
                     {
                         ChainReveal(posX, posY);
+                        Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
+                        Console.Write($"{Revealed} Spaces Revealed.");
                     }
                     break;
                 case ConsoleKey.Escape:
@@ -248,6 +261,8 @@ namespace Minesweeper
                 Console.SetCursorPosition(BoardWidth * 2 + 7, BoardHeight - 1);
                 Console.Write("You win!!");
 
+                WriteStatsFile("Won");
+
                 Thread.Sleep(4000);
                 GameOver = true;
 
@@ -258,14 +273,21 @@ namespace Minesweeper
 
         private void YouLose()
         {
+            Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
+            Console.Write("                        ");
+            Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
+            Console.Write("                        ");
+
             ConsoleColor originalF = Console.ForegroundColor;
             ConsoleColor originalB = Console.BackgroundColor;
 
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.SetCursorPosition(BoardWidth * 2 + 7, BoardHeight - 1);
+            Console.SetCursorPosition(BoardWidth * 2 + 16, BoardHeight - 1);
             Console.Write("You Lose.");
+
+            WriteStatsFile("Lost");
 
             Console.ForegroundColor = originalF;
             Console.BackgroundColor = originalB;
@@ -274,6 +296,28 @@ namespace Minesweeper
         private bool ValidSlots(int x, int y)
         {
             return ((x >= 0) && (y >= 0) && (x < BoardWidth) && (y < BoardHeight));
+        }
+
+        private void WriteStatsFile(String gameResult)
+        {
+            var numberFlagged =
+                from c in listCells
+                where c.Bomb == true && c.Flagged == true
+                select c;
+
+
+            // Write to to a new file named "WriteLines.txt".
+            using (StreamWriter outputFile = new StreamWriter("WriteLines.txt"))
+            {
+                ResultFile = Path.GetFullPath("WriteLines.txt");
+                outputFile.WriteLine("Thanks for playing Minesweeper:");
+                outputFile.WriteLine("-------------------------------\n");
+
+                outputFile.WriteLine($"You {gameResult}.");
+                outputFile.WriteLine($"There were {totalBombs} total bombs.");
+                outputFile.WriteLine($"You found {numberFlagged.Count()} bombs, that's {(numberFlagged.Count() == 0 ? 0 : (double)totalBombs/numberFlagged.Count())}%");
+                outputFile.WriteLine($"You revealed {Revealed} spaces.");
+            }
         }
 
         public Boolean Done()
