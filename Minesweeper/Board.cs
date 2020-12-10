@@ -61,13 +61,13 @@ namespace Minesweeper
         public void FeedbackBox()
         {
             Console.SetCursorPosition(Columns * 2 + 4, Rows - 2);
-            Console.Write("+-------------------------------+");
+            Console.Write("+--------------------------------+");
             Console.SetCursorPosition(Columns * 2 + 4, Rows - 1);
-            Console.Write("|                               |");
+            Console.Write("|                                |");
             Console.SetCursorPosition(Columns * 2 + 4, Rows);
-            Console.Write("|                               |");
+            Console.Write("|                                |");
             Console.SetCursorPosition(Columns * 2 + 4, Rows + 1);
-            Console.Write("+-------------------------------+");
+            Console.Write("+--------------------------------+");
         }
 
         /// <summary>

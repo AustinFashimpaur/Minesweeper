@@ -62,7 +62,7 @@ namespace Minesweeper
         private Cell[,] SetUpCells(int x, int y, int difficulty)
         {
             Cell[,] cells = new Cell[y, x];
-            totalBombs = difficulty * 12;
+            totalBombs = difficulty * 15;
             int totalBombsLeft = totalBombs;
 
             //Generate cells with bombs based on difficulty
@@ -254,9 +254,9 @@ namespace Minesweeper
             if (Revealed == (BoardHeight * BoardWidth) - totalBombs)
             {
                 Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
-                Console.Write("                               ");
+                Console.Write("                                ");
                 Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
-                Console.Write("                               ");
+                Console.Write("                                ");
 
                 ConsoleColor originalF = Console.ForegroundColor;
                 ConsoleColor originalB = Console.BackgroundColor;
@@ -283,9 +283,9 @@ namespace Minesweeper
         private void YouLose()
         {
             Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight);
-            Console.Write("                               ");
+            Console.Write("                                ");
             Console.SetCursorPosition(BoardWidth * 2 + 5, BoardHeight - 1);
-            Console.Write("                               ");
+            Console.Write("                                ");
 
             ConsoleColor originalF = Console.ForegroundColor;
             ConsoleColor originalB = Console.BackgroundColor;
