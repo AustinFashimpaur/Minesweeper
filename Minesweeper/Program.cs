@@ -14,6 +14,7 @@ namespace Minesweeper
         private static int Height;
         static void Main(string[] args)
         {
+            //Console.SetWindowSize(104, 24);
             Console.CursorVisible = false;
             try
             {
@@ -21,7 +22,7 @@ namespace Minesweeper
                 using (var sr = new StreamReader("BoardSize.txt"))
                 {
                     // Read the stream as a string, and write the string to the console.
-                    Console.WriteLine($"Reading From {Path.GetFullPath("BoardSize.txt")}");
+                    //Console.WriteLine($"Reading From {Path.GetFullPath("BoardSize.txt")}");
                     while (sr.Peek() >= 0)
                     {
                         Width = Convert.ToInt32(sr.ReadLine()); //width

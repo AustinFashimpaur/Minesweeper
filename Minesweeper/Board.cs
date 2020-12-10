@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+
 namespace Minesweeper
 {
     /// <summary>
@@ -23,9 +25,22 @@ namespace Minesweeper
 
         public static void MenuScreen()
         {
-            Console.WriteLine("Welcome to Minesweeper.\n");
-            Console.WriteLine("To proceed select a difficulty (1-3) then press enter:");
-            Console.WriteLine("1(Easy) 2(Normal) 3(Hard)");
+            Console.WriteLine("    __   __  ___   __    _  _______  _______  _     _  _______  _______  _______  _______  ______   ");
+            Thread.Sleep(500);
+            Console.WriteLine("   |  |_|  ||   | |  |  | ||       ||       || | _ | ||       ||       ||       ||       ||    _ |  ");
+            Thread.Sleep(500);
+            Console.WriteLine("   |       ||   | |   |_| ||    ___||  _____|| || || ||    ___||    ___||    _  ||    ___||   | ||  ");
+            Thread.Sleep(500);
+            Console.WriteLine("   |       ||   | |       ||   |___ | |_____ |       ||   |___ |   |___ |   |_| ||   |___ |   |_||_ ");
+            Thread.Sleep(500);
+            Console.WriteLine("   |       ||   | |  _    ||    ___||_____  ||       ||    ___||    ___||    ___||    ___||    __  |");
+            Thread.Sleep(500);
+            Console.WriteLine("   | ||_|| ||   | | | |   ||   |___  _____| ||   _   ||   |___ |   |___ |   |    |   |___ |   |  | |");
+            Thread.Sleep(500);
+            Console.WriteLine("   |_|   |_||___| |_|  |__||_______||_______||__| |__||_______||_______||___|    |_______||___|  |_|");
+            Thread.Sleep(1000);
+            Console.WriteLine("\n   To proceed select a difficulty (1-3) then press enter:");
+            Console.WriteLine("   1(Easy) 2(Normal) 3(Hard)");
         }
 
         /// <summary>
