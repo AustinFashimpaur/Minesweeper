@@ -19,12 +19,15 @@ namespace Minesweeper
             try
             {
                 // Open the text file using a stream reader.
-                using (var sr = new StreamReader("BoardSize.txt"))
+                // Is in the following format:
+                // width
+                // height
+                using (var sr = new StreamReader("../../../BoardSize.txt"))
                 {
                     // Read the stream as a string, and write the string to the console.
                     //Console.WriteLine($"Reading From {Path.GetFullPath("BoardSize.txt")}");
                     while (sr.Peek() >= 0)
-                    {
+                    {  
                         Width = Convert.ToInt32(sr.ReadLine()); //width
                         Height = Convert.ToInt32(sr.ReadLine()); //height
                     }

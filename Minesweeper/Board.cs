@@ -40,11 +40,11 @@ namespace Minesweeper
             Console.WriteLine("|_|   |_||___| |_|  |__||_______||_______||__| |__||_______||_______||___|    |_______||___|  |_|");
             Thread.Sleep(5000);
             Console.WriteLine("\nTo proceed select a difficulty (1-3) then press enter:");
-            Console.WriteLine("1(Easy) 2(Normal) 3(Hard)");"   "
+            Console.WriteLine("1(Easy) 2(Normal) 3(Hard)");
         }
 
         /// <summary>
-        /// Prints small table next to board with the rules and win/lose conditions
+        /// Prints small table next to board with the rules and win/lose conditions.
         /// </summary>
         public void RulesScreen() {
             Console.SetCursorPosition(Columns * 2 + 4, 0);
